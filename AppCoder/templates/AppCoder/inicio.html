@@ -1,0 +1,52 @@
+{% extends "AppCoder/padre.html" %}
+
+{% load static %}
+
+
+{% block contenidoQueCambia %}
+
+<div class="container mt-4">
+    <h2 class="text-white">Feed Principal</h2>
+    <hr class="text-white" style="height: 5px;">
+</div>
+
+<div class="container mt-5">
+    <ul class="list-group m-5">
+        {% for publicacion in publicaciones %}
+        <li class="list-group-item">
+            <div class="post-container">
+                <div class="post-header">
+                    <h4>{{ publicacion.autor_nombre }}</h4>
+                    <p class="post-date">Fecha de publicación: {{ publicacion.fecha_publicacion }}</p>
+                </div>
+                <div class="post-content">
+                    {{ publicacion.contenido }}
+                </div>
+                
+                <!-- Mostrar los comentarios relacionados a esta publicación -->
+                <hr>
+                <h4>Comentarios</h4>
+                <ul class="comment-list">
+                    {% for comentario in publicacion.comentario_set.all %}
+                    <li class="comment-item">
+                        <h5>{{ comentario.autor_nombre }}</h5>
+                        <p class="comment-text">{{ comentario.contenido }}</p>
+                        <p class="comment-date">Fecha de comentario: {{ comentario.fecha_comentario }}</p>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <!-- Botón "Comentar" con un identificador único -->
+            <button onclick="mostrarFormularioComentario({{ publicacion.id }})" data-url="{% url 'cargar_formulario_comentario' %}?publicacion_id={{ publicacion.id }}" class="btn btn-light">Comentar</button>
+
+            <!-- Contenedor para el formulario de comentario -->
+            <div id="formulario-comentario-{{ publicacion.id }}"></div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+
+
+

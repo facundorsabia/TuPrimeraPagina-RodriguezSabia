@@ -1,0 +1,23 @@
+{% extends "AppCoder/padre.html" %}
+
+{% load static %}
+
+{% block contenidoQueCambia %}
+    <!--Aquí va lo que cambia, y lo asociado a está vista :) -->
+    {% if miFormulario.errors %}
+
+    <p style="color: red;"> Están mal los datos, revisar</p>
+
+    {% endif %}
+    <form action="" method="POST" class="mx-auto mt-4 p-3 mb-4" style="width: 90%; max-width: 600px; padding: 20px; background-color: #556; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+            {% csrf_token %}
+        
+        <table>
+            {{ miFormulario.as_table }}
+        </table>
+
+        <input type="submit", value="Enviar">
+
+    </form>
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "AppCoder/padre.html" %}
+
+{% load static %}
+
+{% block contenidoQueCambia %}
+
+    <div class="container mt-5">
+        <h2 class="text-white">Muro</h2>
+        <hr class="text-white" style="height: 5px;">
+        <ul class="list-group m-5">
+            {% for publicacion in publicaciones %}
+            <li class="list-group-item">
+                <h4>{{ publicacion.autor_nombre }}</h4>
+                <p>{{ publicacion.contenido }}</p>
+                <p>Fecha de publicación: {{ publicacion.fecha_publicacion }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}
