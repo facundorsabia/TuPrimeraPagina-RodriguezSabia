@@ -17,7 +17,7 @@ class Publicacion(models.Model):
     fecha_publicacion = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return f'Publicación de {self.autor.username}: {self.contenido[:50]}...'  # Mostrar una vista previa del contenido
+        return f'Publicación de {self.autor_nombre}: {self.contenido[:50]}...'  # Mostrar una vista previa del contenido
 
 class Comentario(models.Model):
     publicacion = models.ForeignKey(Publicacion, on_delete=models.CASCADE)

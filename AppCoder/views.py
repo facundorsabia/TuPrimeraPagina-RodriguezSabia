@@ -2,7 +2,13 @@ from django.http.request import QueryDict
 from django.shortcuts import render, HttpResponse, redirect
 from django.http import HttpResponse, JsonResponse
 from AppCoder.models import CrearUsuario, Publicacion, Comentario
-from AppCoder.forms import UsuarioForm, PublicacionForm, ComentarioForm
+from AppCoder.forms import UsuarioForm, PublicacionForm, ComentarioForm, UserCreationFormCustom
+from django.views.generic import ListView
+from django.views.generic.detail import DetailView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
 # Create your views here.
 
@@ -90,3 +96,59 @@ def cargar_formulario_comentario(request):
       # Renderiza el formulario de comentario y lo devuelve como una respuesta AJAX
       comentario_form = ComentarioForm()
       return render(request, 'AppCoder/formulario_comentario.html', {'comentario_form': comentario_form, 'publicacion': publicacion})
+
+class PublicacionListView(ListView):
+      model = Publicacion
+      context_object_name = "publicaciones"
+      template_name = "AppCoder/publicaciones_lista.html"
+
+class PublicacionDetailView(DetailView):
+      model = Publicacion
+      context_object_name = "publicacionDetalle"
+      template_name = "AppCoder/publicacion_detalle.html"
+
+class PublicacionCreateView(CreateView):
+      model = Publicacion
+      template_name = "AppCoder/publicacion_crear.html"
+      fields = ['autor_nombre','titulo', 'contenido']
+      success_url = reverse_lazy('MiMuro')
+
+class PublicacionUpdateView(UpdateView):
+      model = Publicacion
+      template_name = "AppCoder/publicacion_actualizar.html"
+      fields = ['autor_nombre','titulo', 'contenido']
+
+class PublicacionDeleteView(DeleteView):
+      model = Publicacion
+      template_name = "AppCoder/publicacion_eliminar.html"
+      success_url = reverse_lazy('MiMuro')
+
+
+def login_request(request):
+      if request.method == "POST":
+            form = AuthenticationForm(request, data=request.POST)
+
+            if form.is_valid():
+                  usuario = form.cleaned_data.get("username")
+                  contraseña = form.cleaned_data.get("password")
+
+                  user = authenticate(username=usuario, password=contraseña)
+
+                  login(request, user)
+                  return redirect("Inicio", {"mensaje": f'Bienvenido {user.username}'})
+      else:
+            form = AuthenticationForm()
+      return render(request, "AppCoder/login.html", {"form": form})
+
+def register(request):
+      if request.method == "POST":
+            form = UserCreationFormCustom(request.POST)
+
+            if form.is_valid():
+                  user = form.save()
+                  login(request, user)
+                  return redirect("Inicio", {"mensaje": f'Bienvenido {user.username}'})
+      else:
+            form = UserCreationFormCustom()
+
+      return render(request, "AppCoder/registro.html", {"form": form})

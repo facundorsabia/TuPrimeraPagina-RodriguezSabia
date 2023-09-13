@@ -1,0 +1,15 @@
+{% extends "AppCoder/padre.html" %}
+
+{% load static %}
+
+{% block contenidoQueCambia %}
+
+<h1>Publicación Detalle</h1>
+
+<h2>{{publicacion.autor_nombre}}</h2>
+<p>{{publicacion.contenido}}</p>
+<p>
+  <a href="{% url 'publicaciones' %}">Volver</a>
+</p>
+
+{% endblock contenidoQueCambia %}

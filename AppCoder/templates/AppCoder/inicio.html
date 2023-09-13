@@ -10,6 +10,12 @@
     <hr class="text-white" style="height: 5px;">
 </div>
 
+{% if mensaje %}
+    <p>
+        {{ mensaje }}
+    <p>
+{% endif %}
+
 <div class="container mt-5">
     <ul class="list-group m-5">
         {% for publicacion in publicaciones %}
