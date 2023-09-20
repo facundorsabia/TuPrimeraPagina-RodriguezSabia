@@ -4,10 +4,12 @@ from django.contrib.auth.views import LogoutView
 
 
 urlpatterns = [
-    path('', views.inicio, name="Inicio"),
-    path('login', views.login_request, name='login'),
+    ### Login / Logout / Register
+    path('registro', views.registro_view, name='registro'),
+    path('login', views.login_view, name='login'),
     path('logout', LogoutView.as_view(template_name='AppCoder/logout.html'), name='logout'),
-    path('register', views.register, name='register'),
+
+    path('Inicio/', views.inicio, name="Inicio"),
     path('MiMuro', views.muro, name="MiMuro"),
     path('CrearPublicacion', views.publicar, name="CrearPublicacion"),
     path('Hilo', views.hilo, name="Hilo"),

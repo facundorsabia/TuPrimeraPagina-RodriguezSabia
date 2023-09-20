@@ -7,15 +7,16 @@
 
 <div class="container mt-4">
     <h2 class="text-white">Feed Principal</h2>
+    <h5 class="text-white">Aquí podrás ver todas las publicaciones de todos los usuarios y podrás comentarlas. Debes iniciar sesión para poder visualizarlas</h5>
     <hr class="text-white" style="height: 5px;">
+    {% if mensaje %}
+    <div class="mensaje">
+        {{ mensaje }}
+    </div>
+    {% endif %}
 </div>
 
-{% if mensaje %}
-    <p>
-        {{ mensaje }}
-    <p>
-{% endif %}
-
+{% if user.is_authenticated %}
 <div class="container mt-5">
     <ul class="list-group m-5">
         {% for publicacion in publicaciones %}
@@ -44,7 +45,7 @@
             </div>
             
             <!-- Botón "Comentar" con un identificador único -->
-            <button onclick="mostrarFormularioComentario({{ publicacion.id }})" data-url="{% url 'cargar_formulario_comentario' %}?publicacion_id={{ publicacion.id }}" class="btn btn-light">Comentar</button>
+            <button onclick="mostrarFormularioComentario({{ publicacion.id }})" data-url="{% url 'cargar_formulario_comentario' %}?publicacion_id={{ publicacion.id }}" class="btn btn-light my-4">Comentar</button>
 
             <!-- Contenedor para el formulario de comentario -->
             <div id="formulario-comentario-{{ publicacion.id }}"></div>
@@ -52,6 +53,7 @@
         {% endfor %}
     </ul>
 </div>
+{%endif%}
 {% endblock %}
 
 

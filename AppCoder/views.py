@@ -2,10 +2,8 @@ from django.http.request import QueryDict
 from django.shortcuts import render, HttpResponse, redirect
 from django.http import HttpResponse, JsonResponse
 from AppCoder.models import CrearUsuario, Publicacion, Comentario
-from AppCoder.forms import UsuarioForm, PublicacionForm, ComentarioForm, UserCreationFormCustom
-from django.views.generic import ListView
-from django.views.generic.detail import DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from AppCoder.forms import UsuarioForm, PublicacionForm, ComentarioForm, UserCreationFormulario
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
@@ -38,17 +36,17 @@ def hilo(request):
 
 def publicar(request):
       if request.method == 'POST':
-            miFormulario = PublicacionForm(request.POST) #aquí mellega toda la información del html
-            print(miFormulario)
-            if miFormulario.is_valid():   #Si pasó la validación de Django
-                  informacion = miFormulario.cleaned_data
-                  publicacion = Publicacion(contenido=informacion['contenido'], autor_nombre=informacion['autor_nombre'])
+            formulario = PublicacionForm(request.POST)
+            if formulario.is_valid():
+                  contenido = formulario.cleaned_data['contenido']
+                  autor_nombre = request.user
+                  publicacion = Publicacion(contenido=contenido, autor_nombre=autor_nombre)
                   publicacion.save()
                   publicaciones = Publicacion.objects.all()
                   return render(request, "AppCoder/mimuro.html", {"publicaciones": publicaciones}) #Vuelvo al mi muro
       else: 
-            miFormulario= PublicacionForm() #Formulario vacio para construir el html
-      return render(request, "AppCoder/publicar.html", {"miFormulario":miFormulario})
+            formulario= PublicacionForm() #Formulario vacio para construir el html
+      return render(request, "AppCoder/publicar.html", {"formulario":formulario})
 
 
 def buscar_publicaciones(request):
@@ -66,7 +64,7 @@ def crear_comentario(request):
             comentario_form = ComentarioForm(request.POST)
             if comentario_form.is_valid():
                   # Obtén los datos del formulario y crea el comentario
-                  autor_nombre = comentario_form.cleaned_data['autor_nombre']
+                  autor_nombre = request.user
                   contenido = comentario_form.cleaned_data['contenido']
                   publicacion_id = request.POST.get('publicacion_id')
                   publicacion = Publicacion.objects.get(id=publicacion_id)
@@ -124,31 +122,72 @@ class PublicacionDeleteView(DeleteView):
       success_url = reverse_lazy('MiMuro')
 
 
-def login_request(request):
+def login_view(request):
+      if request.user.is_authenticated:
+            return render(
+                  request,
+                  "AppCoder/login.html",
+                  {"mensaje": f"Bienvenidx: {request.user.username}"}
+            )
+
       if request.method == "POST":
-            form = AuthenticationForm(request, data=request.POST)
+            formulario = AuthenticationForm(request, data=request.POST)
+            if formulario.is_valid():
+                  informacion = formulario.cleaned_data
+                  usuario = informacion["username"]
+                  password = informacion["password"]
+                  modelo = authenticate(username=usuario, password=password)
+                  
+                  if modelo is not None:
+                        login(request, modelo)
+                        return render(
+                              request,
+                              "AppCoder/login.html",
+                              {"mensaje": f"Bienvenidx {modelo.username}"}
+                        )
+                  else:
+                        mensaje = "Usuario o contraseña incorrectos. Intente nuevamente."
+            else:
+                  mensaje = "Formulario inválido. Verifique los campos."
 
-            if form.is_valid():
-                  usuario = form.cleaned_data.get("username")
-                  contraseña = form.cleaned_data.get("password")
-
-                  user = authenticate(username=usuario, password=contraseña)
-
-                  login(request, user)
-                  return redirect("Inicio", {"mensaje": f'Bienvenido {user.username}'})
       else:
-            form = AuthenticationForm()
-      return render(request, "AppCoder/login.html", {"form": form})
+            formulario = AuthenticationForm()
+            mensaje = None
 
-def register(request):
-      if request.method == "POST":
-            form = UserCreationFormCustom(request.POST)
+      return render(
+            request,
+            "AppCoder/login.html",
+            {"form": formulario, "mensaje": mensaje}
+      )
 
-            if form.is_valid():
-                  user = form.save()
-                  login(request, user)
-                  return redirect("Inicio", {"mensaje": f'Bienvenido {user.username}'})
+
+def registro_view(request):
+
+      if request.method == "GET":
+            return render(
+            request,
+            "AppCoder/registro.html",
+            {"form": UserCreationFormulario()}
+            )
       else:
-            form = UserCreationFormCustom()
+            formulario = UserCreationFormulario(request.POST)
+            if formulario.is_valid():
+                  informacion = formulario.cleaned_data
+                  usuario = informacion["username"]
+                  password = informacion["password1"]
+                  formulario.save()
 
-      return render(request, "AppCoder/registro.html", {"form": form})
+                  user = authenticate(request, username=usuario, password=password)
+                  if user is not None:
+                        login(request, user)
+                        return render(
+                              request,
+                              "AppCoder/registro.html",
+                              {"mensaje": f"Usuario creado: {usuario}"}
+                        )
+            else:
+                  return render(
+                        request,
+                        "AppCoder/registro.html",
+                        {"form": formulario}
+                  )

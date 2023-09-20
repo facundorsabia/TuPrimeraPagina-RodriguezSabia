@@ -15,20 +15,23 @@
 
     {% endif %}
 
-
+    {% if user.is_authenticated %}
     <form action="" method="POST" class="mx-auto mt-4 p-3 mb-4" style="width: 90%; max-width: 600px; padding: 20px; background-color: #556; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
         {% csrf_token %}
         <table class="table table-borderless" style="">
-            <th class="text-white">Autor</th>
-            <td>{{ miFormulario.autor_nombre }}</td>
-        </tr>
         <tr>
             <th class="text-white">Contenido</th>
-            <td>{{ miFormulario.contenido }}</td>
+            <td>{{ formulario.contenido }}</td>
         </tr>
         </table>
         <div class="text-center">
             <button type="submit" class="btn btn-light">Enviar</button>
         </div>
     </form>
+    {% else %}
+    <div class="container mt-4">
+    <h5 class="text-white">Debes iniciar sesión para crear una publicación.</h5>
+    <a href="{% url 'login' %}" class="btn btn-light mt-4">Iniciar sesión</a>
+    </div>
+    {% endif %}
 {% endblock %}

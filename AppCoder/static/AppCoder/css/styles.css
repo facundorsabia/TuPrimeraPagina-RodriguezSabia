@@ -11381,7 +11381,9 @@ footer.footer {
 }
 
 
-/*Customized CSS*/
+/*Customized CSS by Facundo Rodriguez Sabia*/
+
+
     .post-container {
         border: 1px solid #ccc;
         padding: 10px;
@@ -11436,3 +11438,13 @@ footer.footer {
         background-color: #f0f0f0;
         color: #333;
     }
+
+    .mensaje {
+      padding: 10px;
+      margin: 10px;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      color: #333;
+  }

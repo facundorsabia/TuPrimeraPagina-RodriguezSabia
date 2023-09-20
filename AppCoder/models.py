@@ -13,7 +13,7 @@ class CrearUsuario(models.Model):
 
 class Publicacion(models.Model):
     contenido = models.CharField(max_length=280)  # Limitamos el contenido a 280 caracteres (simulando la restricción de Twitter)
-    autor_nombre = models.CharField(max_length=50) 
+    autor_nombre = models.ForeignKey(User, on_delete=models.CASCADE)
     fecha_publicacion = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
@@ -21,7 +21,7 @@ class Publicacion(models.Model):
 
 class Comentario(models.Model):
     publicacion = models.ForeignKey(Publicacion, on_delete=models.CASCADE)
-    autor_nombre = models.CharField(max_length=50)
+    autor_nombre = models.ForeignKey(User, on_delete=models.CASCADE)
     contenido = models.TextField()
     fecha_comentario = models.DateTimeField(auto_now_add=True)
 

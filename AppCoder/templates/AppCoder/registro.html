@@ -1,14 +1,51 @@
-{% extends "AppCoder/padre.html" %}
-
-{% load static %}
+{% extends 'AppCoder/padre.html' %}
 
 {% block contenidoQueCambia %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro</title>
+    <style>
+        .error-list {
+            color: white;
+        }
+    </style>
+</head>
 
-<h1>Registro</h1>
-  <form action="" method="POST">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Registrate!</button>
-  </form>
+<body style="background-color: rgb(227, 224, 225);">
+  <div class="container mt-4">
+    <h2 class="text-white">Registrate</h2>
+    <hr class="text-white" style="height: 5px;">
+    {% if mensaje %}
+    <div class="mensaje">
+        {{ mensaje }}
+    </div>
+    {% endif %}
+    {%if not user.is_authenticated %}
+    <form action="/AppCoder/registro" method="POST" class="mx-auto mt-4 p-3 mb-4" style="width: 90%; max-width: 600px; padding: 20px; background-color: #646b63; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+        {% csrf_token %}
+        {% for field in form %}
+            <p>
+                {{ field.label_tag }}
+                {{ field }}
 
+                {% if field.errors %}
+                    <ul class="error-list">
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </p>
+        {% endfor %}
+
+        <input type="submit" value="Iniciar sesión" class="btn btn-light">
+    </form>
+    {% endif %}
+  </div>
+</body>
+</html>
 {% endblock %}

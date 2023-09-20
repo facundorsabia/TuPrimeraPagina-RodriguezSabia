@@ -6,31 +6,21 @@ class UsuarioForm(forms.Form):
     usuario = forms.CharField()
     contraseña = forms.CharField(widget=forms.PasswordInput)
 
-class PublicacionForm(forms.Form):
-    autor_nombre = forms.CharField(
-        label="Nombre del Autor",
-        max_length=50,
-        widget=forms.TextInput(attrs={'class': 'form-control input-white', 'style': 'width: 100%;'})
-    )    
+class PublicacionForm(forms.Form):  
     contenido = forms.CharField(
         label="Contenido",
         max_length=280,
         widget=forms.Textarea(attrs={'class': 'form-control input-white', 'style': 'width: 100%;', 'rows': 3}),
     )
     
-class ComentarioForm(forms.Form):
-    autor_nombre = forms.CharField(
-        label="Nombre del Autor",
-        max_length=50,
-        widget=forms.TextInput(attrs={'class': 'form-control input-white', 'style': 'width: 100%;'})
-    )    
+class ComentarioForm(forms.Form): 
     contenido = forms.CharField(
         label="Contenido",
         max_length=280,
         widget=forms.Textarea(attrs={'class': 'form-control input-white', 'style': 'width: 100%;', 'rows': 3}),
     )
 
-class UserCreationFormCustom(UserCreationForm):
+class UserCreationFormulario(UserCreationForm):
     username = forms.CharField(label="Usuario")
     email = forms.EmailField(label="Correo Electrónico")
     password1 = forms.CharField(label="Contraseña", widget=forms.PasswordInput)
