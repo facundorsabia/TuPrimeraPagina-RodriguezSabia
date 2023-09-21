@@ -1,0 +1,36 @@
+{% extends 'AppCoder/padre.html' %}
+
+{% block contenidoQueCambia%}
+<!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Editar usuario</title>
+    </head>
+
+    <body style="background-color: rgb(146, 200, 102);">
+        <div class="container mt-4">
+            <h2 class="text-white">Edita tu Perfil</h2>
+            <h5 class="text-white">Aquí podrás cambiar tu nombre de usuario, tu e-mail o dirigirte al formulario para cambiar tu contraseña.</h5>
+            <hr class="text-white" style="height: 5px;">
+
+    {% if mensaje %}
+    <div class="mensaje">
+        {{ mensaje }}
+    </div>
+    {% endif %}
+
+        <form action="/AppCoder/editar-usuario" method="POST" class="mx-auto mt-4 p-3 mb-4" style="width: 90%; max-width: 600px; padding: 20px; background-color: #556; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Guardar" class="btn btn-light">
+        </form>
+        <h4 class="text-white">Si quieres cambiar tu contraseña has click aquí: 
+            <a class="btn btn-light mx-3" href="{% url 'cambiar_contrasenia'%}">Cambiar Contraseña</a></h4>
+    </div>
+    </body>
+    </html>
+{% endblock%}

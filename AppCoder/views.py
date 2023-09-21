@@ -1,14 +1,16 @@
-from django.http.request import QueryDict
-from django.shortcuts import render, HttpResponse, redirect
-from django.http import HttpResponse, JsonResponse
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from AppCoder.models import CrearUsuario, Publicacion, Comentario
-from AppCoder.forms import UsuarioForm, PublicacionForm, ComentarioForm, UserCreationFormulario
+from AppCoder.forms import UsuarioForm, PublicacionForm, ComentarioForm, UserCreationFormulario, UserEditionFormulario
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.translation import gettext as _
+from django.contrib.auth.forms import PasswordChangeForm
 
-# Create your views here.
 
 def inicio(request):
       publicaciones = Publicacion.objects.all()
@@ -18,20 +20,6 @@ def inicio(request):
 def muro(request):
       publicaciones = Publicacion.objects.all()
       return render(request, "AppCoder/mimuro.html", {"publicaciones": publicaciones})
-
-
-def hilo(request):
-      if request.method == 'POST':
-            miFormulario = UsuarioForm(request.POST)
-            print(miFormulario)
-            if miFormulario.is_valid:
-                  informacion = miFormulario.cleaned_data
-                  usuario  = CrearUsuario(usuario=informacion['usuario'], contraseña=informacion['contraseña']) 
-                  usuario.save()
-                  return redirect('Inicio')
-      else: 
-            miFormulario= UsuarioForm()
-      return render(request, "AppCoder/hilo.html", {"miFormulario":miFormulario})
 
 
 def publicar(request):
@@ -121,6 +109,38 @@ class PublicacionDeleteView(DeleteView):
       template_name = "AppCoder/publicacion_eliminar.html"
       success_url = reverse_lazy('MiMuro')
 
+#Login, Logout, Registro y Editar Usuario
+
+def registro_view(request):
+
+      if request.method == "GET":
+            return render(
+            request,
+            "AppCoder/registro.html",
+            {"form": UserCreationFormulario()}
+            )
+      else:
+            formulario = UserCreationFormulario(request.POST)
+            if formulario.is_valid():
+                  informacion = formulario.cleaned_data
+                  usuario = informacion["username"]
+                  password = informacion["password1"]
+                  formulario.save()
+
+                  user = authenticate(request, username=usuario, password=password)
+                  if user is not None:
+                        login(request, user)
+                        return render(
+                              request,
+                              "AppCoder/registro.html",
+                              {"mensaje": f"Usuario creado: {usuario}"}
+                        )
+            else:
+                  return render(
+                        request,
+                        "AppCoder/registro.html",
+                        {"form": formulario}
+                  )
 
 def login_view(request):
       if request.user.is_authenticated:
@@ -160,34 +180,73 @@ def login_view(request):
             {"form": formulario, "mensaje": mensaje}
       )
 
+def editar_usuario_view(request):
 
-def registro_view(request):
+      if not request.user.is_authenticated:
+            return render(
+                  request,
+                  "AppCoder/login.html",
+                  {"form": AuthenticationForm()}
+            )
 
       if request.method == "GET":
             return render(
-            request,
-            "AppCoder/registro.html",
-            {"form": UserCreationFormulario()}
+                  request,
+                  "AppCoder/editar_usuario.html",
+                  {"form": UserEditionFormulario()}
             )
       else:
-            formulario = UserCreationFormulario(request.POST)
+            formulario = UserEditionFormulario(request.POST)
             if formulario.is_valid():
                   informacion = formulario.cleaned_data
-                  usuario = informacion["username"]
-                  password = informacion["password1"]
-                  formulario.save()
+                  user = request.user
+                  user.email = informacion["email"]
+                  user.username = informacion["username"]
+                  user.save()
 
-                  user = authenticate(request, username=usuario, password=password)
-                  if user is not None:
-                        login(request, user)
-                        return render(
-                              request,
-                              "AppCoder/registro.html",
-                              {"mensaje": f"Usuario creado: {usuario}"}
-                        )
+                  return render(
+                  request,
+                  "AppCoder/edicion_success.html",
+                  {"mensaje": f"Sus cambios fueron guardados exitosamente."}
+                  )
             else:
                   return render(
-                        request,
-                        "AppCoder/registro.html",
-                        {"form": formulario}
+                  request,
+                  "AppCoder/editar_usuario.html",
+                  {"form": formulario}
                   )
+
+def edicion_exitosa(request):
+      return render(
+            request,
+            "AppCoder/edicion_success.html",
+            {"mensaje": f"Sus cambios fueron guardados exitosamente."}
+      )
+class CustomPasswordChangeForm(PasswordChangeForm):
+      error_messages = {
+            'password_incorrect': _('La contraseña actual es incorrecta.'),
+            'password_mismatch': _('Las contraseñas no coinciden.'),
+            'password_common': _('La contraseña no puede ser una contraseña común.'),
+            'password_too_short': _('La contraseña debe tener al menos 8 caracteres.'),
+            'password_entirely_numeric': _('La contraseña no puede ser completamente numérica.'),
+      }
+
+      def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            for field_name, field in self.fields.items():
+                  field.help_text = ""
+class CambiarContrasenia(LoginRequiredMixin, PasswordChangeView):
+      template_name = "AppCoder/cambiar_contrasenia.html"
+      success_url =  "edicion_exitosa"
+      form_class = CustomPasswordChangeForm
+
+      def form_invalid(self, form):
+            context = self.get_context_data(form=form)
+            return self.render_to_response(context)
+      
+      def get_form(self):
+            form = super().get_form()
+            form.fields['old_password'].label = _('Contraseña Actual')
+            form.fields['new_password1'].label = _('Nueva Contraseña')
+            form.fields['new_password2'].label = _('Confirmar Nueva Contraseña')
+            return form

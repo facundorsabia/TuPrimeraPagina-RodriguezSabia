@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, UserModel
 from django.contrib.auth.models import User
 
 class UsuarioForm(forms.Form):
@@ -12,7 +12,7 @@ class PublicacionForm(forms.Form):
         max_length=280,
         widget=forms.Textarea(attrs={'class': 'form-control input-white', 'style': 'width: 100%;', 'rows': 3}),
     )
-    
+
 class ComentarioForm(forms.Form): 
     contenido = forms.CharField(
         label="Contenido",
@@ -20,6 +20,7 @@ class ComentarioForm(forms.Form):
         widget=forms.Textarea(attrs={'class': 'form-control input-white', 'style': 'width: 100%;', 'rows': 3}),
     )
 
+#Formulario de Registro
 class UserCreationFormulario(UserCreationForm):
     username = forms.CharField(label="Usuario")
     email = forms.EmailField(label="Correo Electrónico")
@@ -29,3 +30,14 @@ class UserCreationFormulario(UserCreationForm):
         model = User
         fields = ("username", "email", "password1", "password2")
         help_texts = {k:"" for k in fields}
+
+#Formulario de edición
+class UserEditionFormulario(UserChangeForm):
+    email = forms.EmailField()
+    username = forms.CharField(label="Usuario")
+    password = None
+
+    class Meta:
+        model = UserModel
+        fields = ["username", "email"]
+        help_texts = {k: "" for k in fields}

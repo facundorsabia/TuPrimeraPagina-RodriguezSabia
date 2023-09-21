@@ -1,0 +1,30 @@
+{% extends 'AppCoder/padre.html' %}
+
+{% block contenidoQueCambia%}
+<!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Cambiar Contraseña</title>
+  </head>
+
+  <body style="background-color: rgb(146, 200, 102);">
+    <div class="container mt-4">
+      <h2 class="text-white">Cmbiar Contraseña</h2>
+      <hr class="text-white" style="height: 5px;">
+      <form method="POST" class="mx-auto mt-4 p-3 mb-4" style="width: 90%; max-width: 600px; padding: 20px; background-color: #556; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+          {% csrf_token %}
+          <table>
+          {{ form }}
+          </table>
+          <button type="submit">Cambiar</button>
+      </form>
+    </div>
+  </body>
+
+
+  </html>
+{% endblock%}
