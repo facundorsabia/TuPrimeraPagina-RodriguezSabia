@@ -7,8 +7,8 @@
 <div class="container mt-4">
     <h2 class="text-white">Busca publicaciones por palabras:</h2>
     <hr class="text-white" style="height: 5px;">
-    <form class="col-md-6 mx-auto" method="get" action="{% url 'Busqueda' %}">
-        <input class="w-100 m-4" type="text" name="q" placeholder="Buscar..." value="{{ request.GET.q }}">
+    <form  method="get" action="{% url 'Busqueda' %}" class="mx-auto mt-4 p-3 mb-4" style="width: 90%; max-width: 600px; padding: 20px; background-color: #646b63; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+        <input class="m-4" type="text" name="q" placeholder="Buscar..." value="{{ request.GET.q }}" style="width: 80%;">
         <button type="submit" class="btn btn-light d-block mx-auto mb-4">Buscar</button>
     </form>
     <ul>

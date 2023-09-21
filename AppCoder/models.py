@@ -1,16 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 # Create your models here.
-
-class CrearUsuario(models.Model):
-    usuario = models.CharField(max_length=255)
-    contraseña = models.CharField(max_length=255)  # En una aplicación real, deberías considerar el uso de un campo de contraseña más seguro como 'PasswordField'.
-
-    def __str__(self):
-        return self.usuario
-
 class Publicacion(models.Model):
     contenido = models.CharField(max_length=280)  # Limitamos el contenido a 280 caracteres (simulando la restricción de Twitter)
     autor_nombre = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -27,3 +20,11 @@ class Comentario(models.Model):
 
     def __str__(self):
         return f"Comentario de {self.autor_nombre} en la publicación de {self.publicacion.autor_nombre}"
+    
+
+class Avatar(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    imagen = models.ImageField(upload_to='avatars', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user} - {self.imagen}"

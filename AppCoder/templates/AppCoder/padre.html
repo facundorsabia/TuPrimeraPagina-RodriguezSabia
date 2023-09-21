@@ -6,8 +6,8 @@
 
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
+        <meta name="description" content="Proyecto Final para el curso de Python de Coder House" />
+        <meta name="author" content="Facundo Rodriguez Sabia" />
         <title>RED</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="{%static 'AppCoder/assets/favicon.ico' %}" />
@@ -24,6 +24,11 @@
         <nav class="navbar navbar-light bg-light static-top">
             <div class="container">
                 {% if user.is_authenticated %}
+                    {% with avatar=request.user.avatar %}
+                        {% if avatar %}
+                            <img src="{{avatar.imagen.url}}" alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%;">
+                        {% endif %}
+                    {% endwith %}
                     <a class="navbar-brand" href="{% url 'Inicio' %}">Inicio</a>
                     <a class="navbar-brand" href="{% url 'MiMuro' %}">Mi Muro</a>
                     <a class="navbar-brand" href="{% url 'CrearPublicacion' %}">Crear Publicación</a>
@@ -82,7 +87,7 @@
                             <li class="list-inline-item">⋅</li>
                             <li class="list-inline-item"><a href="#!">Contacto</a></li>
                         </ul>
-                        <p class="text-muted small mb-4 mb-lg-0">&copy; Curso de Python - CoderHouse.</p>
+                        <p class="text-muted small mb-4 mb-lg-0">&copy; Curso de Python - CoderHouse. Proyecto Final por Facundo Rodriguez Sabia</p>
                     </div>
                     <div class="col-lg-6 h-100 text-center text-lg-end my-auto">
                         <ul class="list-inline mb-0">

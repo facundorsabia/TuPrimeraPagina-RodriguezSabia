@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from AppCoder.models import CrearUsuario, Publicacion, Comentario
+from AppCoder.models import Publicacion, Comentario
 from AppCoder.forms import UsuarioForm, PublicacionForm, ComentarioForm, UserCreationFormulario, UserEditionFormulario
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
@@ -181,7 +181,6 @@ def login_view(request):
       )
 
 def editar_usuario_view(request):
-
       if not request.user.is_authenticated:
             return render(
                   request,
@@ -196,12 +195,20 @@ def editar_usuario_view(request):
                   {"form": UserEditionFormulario()}
             )
       else:
-            formulario = UserEditionFormulario(request.POST)
+            formulario = UserEditionFormulario(request.POST, request.FILES, instance=request.user)
             if formulario.is_valid():
                   informacion = formulario.cleaned_data
                   user = request.user
                   user.email = informacion["email"]
                   user.username = informacion["username"]
+                  
+                  # Verificar si el campo 'avatar' se ha enviado en la solicitud
+                  if 'avatar' in request.FILES:
+                        user.avatar = request.FILES['avatar']
+                        print("Avatar cargado:", user.avatar)  # Mensaje de depuración
+                  else:
+                        print("Ningún avatar cargado")  # Mensaje de depuración
+                  
                   user.save()
 
                   return render(
@@ -210,11 +217,15 @@ def editar_usuario_view(request):
                   {"mensaje": f"Sus cambios fueron guardados exitosamente."}
                   )
             else:
+                  formulario = UserEditionFormulario(instance=request.user)
+                  print("Errores en el formulario:", formulario.errors)  # Mensaje de depuración
+                  
                   return render(
                   request,
                   "AppCoder/editar_usuario.html",
                   {"form": formulario}
                   )
+
 
 def edicion_exitosa(request):
       return render(

@@ -23,10 +23,22 @@
     </div>
     {% endif %}
 
-        <form action="/AppCoder/editar-usuario" method="POST" class="mx-auto mt-4 p-3 mb-4" style="width: 90%; max-width: 600px; padding: 20px; background-color: #556; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+        <form action="/AppCoder/editar-usuario" method="POST" enctype="multipart/form-data" class="mx-auto mt-4 p-3 mb-4" style="width: 90%; max-width: 600px; padding: 20px; background-color: #646b63; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" value="Guardar" class="btn btn-light">
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                    <strong>Error:</strong> Por favor, corrige los siguientes errores.
+                    <ul>
+                        {% for field, error_list in form.errors.items %}
+                        {% for error in error_list %}
+                        <li>{{ field }}: {{ error }}</li>
+                        {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
         </form>
         <h4 class="text-white">Si quieres cambiar tu contraseña has click aquí: 
             <a class="btn btn-light mx-3" href="{% url 'cambiar_contrasenia'%}">Cambiar Contraseña</a></h4>

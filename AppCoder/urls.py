@@ -1,6 +1,8 @@
 from django.urls import path
 from AppCoder import views
 from django.contrib.auth.views import LogoutView
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 urlpatterns = [
@@ -25,3 +27,5 @@ urlpatterns = [
     #path('publicacion/<int:pk>/update/', views.PublicacionUpdateView.as_view(), name='publicacion_update'),
     #path('publicacion/<int:pk>/delete/', views.PublicacionDeleteView.as_view(), name='publicacion_delete'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

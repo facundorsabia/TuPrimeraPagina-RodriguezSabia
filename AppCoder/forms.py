@@ -31,13 +31,14 @@ class UserCreationFormulario(UserCreationForm):
         fields = ("username", "email", "password1", "password2")
         help_texts = {k:"" for k in fields}
 
-#Formulario de edición
+#Formulario de edición de usuario
 class UserEditionFormulario(UserChangeForm):
     email = forms.EmailField()
     username = forms.CharField(label="Usuario")
+    imagen = forms.ImageField(label="Imagen de Perfil", required=False)
     password = None
 
     class Meta:
         model = UserModel
-        fields = ["username", "email"]
+        fields = ["username", "email", "imagen"]
         help_texts = {k: "" for k in fields}

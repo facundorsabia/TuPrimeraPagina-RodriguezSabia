@@ -5,11 +5,11 @@
 
 <!-- formulario_comentario.html -->
 
-<form method="post" action="{% url 'crear_comentario' %}" id="comentario-form-{{ publicacion.id }}" onsubmit="enviarComentario({{ publicacion.id }}); return false;" style="width: 90%; max-width: 600px; padding: 20px; background-color: #556; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+<form method="post" action="{% url 'crear_comentario' %}" id="comentario-form-{{ publicacion.id }}" onsubmit="enviarComentario({{ publicacion.id }}); return false;" class="mx-auto mt-4 p-3 mb-4" style="width: 90%; max-width: 600px; padding: 20px; background-color: #646b63; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
     {% csrf_token %}
     <input type="hidden" name="publicacion_id" value="{{ publicacion.id }}">
     {{ comentario_form.as_p }}
-    <input type="submit" value="Publicar Comentario">
+    <input type="submit" value="Publicar Comentario" class="btn btn-light">
 </form>
 
 {% endblock %}

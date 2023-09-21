@@ -4,8 +4,8 @@ from  .models import * #importamos el archivo models
 # Register your models here.
 #registramos los modelos
 
-admin.site.register(CrearUsuario)
-
 admin.site.register(Publicacion)
 
 admin.site.register(Comentario)
+
+admin.site.register(Avatar)
