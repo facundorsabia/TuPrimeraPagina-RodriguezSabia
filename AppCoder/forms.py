@@ -1,6 +1,8 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm, UserModel
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.forms import ModelForm
 from django.contrib.auth.models import User
+from .models import *
 
 class UsuarioForm(forms.Form):
     usuario = forms.CharField()
@@ -35,10 +37,25 @@ class UserCreationFormulario(UserCreationForm):
 class UserEditionFormulario(UserChangeForm):
     email = forms.EmailField()
     username = forms.CharField(label="Usuario")
-    imagen = forms.ImageField(label="Imagen de Perfil", required=False)
     password = None
 
     class Meta:
-        model = UserModel
-        fields = ["username", "email", "imagen"]
+        model = User
+        fields = ["username", "email"]
         help_texts = {k: "" for k in fields}
+        
+
+class AvatarUploadForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['avatar']
+        
+
+class PublicacionEditForm(forms.ModelForm):
+    class Meta:
+        model = Publicacion
+        fields = ['contenido'] 
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['contenido'].widget.attrs.update({'class': 'form-control', 'rows': 3})

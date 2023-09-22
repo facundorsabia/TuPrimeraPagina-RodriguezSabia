@@ -9,31 +9,45 @@
         <h5 class="text-white">Aquí podrás ver todas tus publicaciones</h5>
         <hr class="text-white" style="height: 5px;">
         <ul class="list-group m-5">
-            {% for publicacion in publicaciones %}
-                {% if publicacion.autor_nombre == user %}
-                <li class="list-group-item">
-                    <div class="post-container">
-                        <div class="post-header">
-                            <h4>{{ publicacion.autor_nombre }}</h4>
-                        <p class="post-date">Fecha de publicación: {{ publicacion.fecha_publicacion }}</p>
-                        </div>
-                    <div class="post-content">
-                            {{ publicacion.contenido }}
-                    </div>
-                        <!-- Mostrar los comentarios relacionados a esta publicación -->
-                        <hr>
-                        <h4>Comentarios</h4>
-                        <ul class="comment-list">
-                            {% for comentario in publicacion.comentario_set.all %}
-                            <li class="comment-item">
-                                <h5>{{ comentario.autor_nombre }}</h5>
-                                <p class="comment-text">{{ comentario.contenido }}</p>
-                                <p class="comment-date">Fecha de comentario: {{ comentario.fecha_comentario }}</p>
-                </li>
+            {% if publicaciones %}
+                {% for publicacion in publicaciones %}
+                    {% if publicacion.autor_nombre == user %}
+                        <li class="list-group-item">
+                            <div class="post-container">
+                                <div class="post-header">
+                                    <h4>{{ publicacion.autor_nombre }}</h4>
+                                    <p class="post-date">Fecha de publicación: {{ publicacion.fecha_publicacion }}</p>
+                                </div>
+                                <div class="post-content">
+                                    {{ publicacion.contenido }}
+                                </div>
+                                <!-- Mostrar los comentarios relacionados a esta publicación -->
+                                <hr>
+                                {% if publicacion.comentario_set.all %}
+                                    <h4>Comentarios</h4>
+                                    <ul class="comment-list">
+                                        {% for comentario in publicacion.comentario_set.all %}
+                                            <li class="comment-item">
+                                                <h5>{{ comentario.autor_nombre }}</h5>
+                                                <p class="comment-text">{{ comentario.contenido }}</p>
+                                                <p class="comment-date">Fecha de comentario: {{ comentario.fecha_comentario }}</p>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                <a href="{% url 'editar_publicacion' publicacion.pk %}" class="btn btn-secondary m-4">Editar Publicación</a>
+                                <!-- Botón para eliminar publicacion -->
+                                <form method="post" action="{% url 'eliminar_publicacion' publicacion.pk %}" style="width:30%; display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-dark">Eliminar Publicación</button>
+                                </form>
+                            </div>
+                        </li>
+                    {% endif %}
                 {% endfor %}
-                </ul>
-                {% endif %}
-            {% endfor %}
+            {% else %}
+                <h5 class="text-white">No has hecho ninguna publicación, ¡anímate a hacer la primera!</h5>
+            {% endif %}
         </ul>
     </div>
 

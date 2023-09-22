@@ -1,5 +1,4 @@
 from django.db import models
-from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib.auth.models import User
 
@@ -21,10 +20,10 @@ class Comentario(models.Model):
     def __str__(self):
         return f"Comentario de {self.autor_nombre} en la publicación de {self.publicacion.autor_nombre}"
     
-
-class Avatar(models.Model):
+class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    imagen = models.ImageField(upload_to='avatars', null=True, blank=True)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
 
     def __str__(self):
-        return f"{self.user} - {self.imagen}"
+        return self.user.username
+

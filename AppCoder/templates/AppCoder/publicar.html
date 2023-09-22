@@ -7,6 +7,7 @@
     <div class="container mt-4">
         <h2 class="text-white">Crea una publicación</h2>
         <hr class="text-white" style="height: 5px;">
+        <h5 class="text-white">Comparte tus pensamientos con la red, animate!</h5>
     </div>
     
     {% if miFormulario.errors %}
@@ -20,12 +21,12 @@
         {% csrf_token %}
         <table class="table table-borderless" style="">
         <tr>
-            <th class="text-white">Contenido</th>
+            <th class="text-white">Posteo</th>
             <td>{{ formulario.contenido }}</td>
         </tr>
         </table>
         <div class="text-center">
-            <button type="submit" class="btn btn-light">Enviar</button>
+            <button type="submit" class="btn btn-light">Publicar</button>
         </div>
     </form>
     {% else %}

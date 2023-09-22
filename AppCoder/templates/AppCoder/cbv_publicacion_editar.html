@@ -1,0 +1,19 @@
+{% extends "AppCoder/padre.html" %}
+
+{% load static %}
+
+{% block contenidoQueCambia %}
+
+    <div class="container mt-5">
+        <h2 class="text-white">Editar Publicación</h2>
+        <hr class="text-white" style="height: 5px;">
+        <form method="post" class="mx-auto mt-4 p-3 mb-4" style="width: 90%; max-width: 600px; padding: 20px; background-color: #646b63; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);">
+            {% csrf_token %}
+            {{ form.as_p }}  {# Renderiza el formulario como párrafos, puedes usar otros métodos de renderización si prefieres #}
+            <button type="submit" class="btn btn-dark">Guardar Cambios</button>
+        </form>
+    </div>
+
+{% endblock %}
+
+

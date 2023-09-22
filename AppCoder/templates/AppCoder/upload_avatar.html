@@ -1,0 +1,27 @@
+{% extends 'AppCoder/padre.html' %}
+
+{% block contenidoQueCambia%}
+<!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Editar usuario</title>
+    </head>
+
+    <body style="background-color: rgb(146, 200, 102);">
+        <div class="container mt-4">
+            <h2 class="text-white">Sube una foto de perfil</h2>
+            {% block content %}
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit">Cargar</button>
+                </form>
+                {% endblock %}
+        </div>
+    </body>
+    </html>
+{% endblock%}

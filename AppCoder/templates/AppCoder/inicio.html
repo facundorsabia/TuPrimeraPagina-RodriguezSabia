@@ -1,23 +1,13 @@
 {% extends "AppCoder/padre.html" %}
-
 {% load static %}
 
-
 {% block contenidoQueCambia %}
-
 <div class="container mt-4">
     <h2 class="text-white">Feed Principal</h2>
     <h5 class="text-white">Aquí podrás ver todas las publicaciones de todos los usuarios y podrás comentarlas. Debes iniciar sesión para poder visualizarlas</h5>
     <hr class="text-white" style="height: 5px;">
-    {% if mensaje %}
-    <div class="mensaje">
-        {{ mensaje }}
-    </div>
-    {% endif %}
-</div>
-
-{% if user.is_authenticated %}
-<div class="container mt-5">
+    
+    {% if publicaciones %}
     <ul class="list-group m-5">
         {% for publicacion in publicaciones %}
         <li class="list-group-item">
@@ -32,6 +22,7 @@
                 
                 <!-- Mostrar los comentarios relacionados a esta publicación -->
                 <hr>
+                {% if publicacion.comentario_set.all %}
                 <h4>Comentarios</h4>
                 <ul class="comment-list">
                     {% for comentario in publicacion.comentario_set.all %}
@@ -42,6 +33,7 @@
                     </li>
                     {% endfor %}
                 </ul>
+                {% endif %}
             </div>
             
             <!-- Botón "Comentar" con un identificador único -->
@@ -52,9 +44,14 @@
         </li>
         {% endfor %}
     </ul>
+    {% else %}
+    <h5 class="text-white">Nadie ha publicado nada en esta red social aún, sé el primero y sé parte de nuestra historia!</h5>
+    {% endif %}
 </div>
-{%endif%}
+
+{% if user.is_authenticated %}
+<div class="container mt-5">
+    <!-- Aquí puedes agregar contenido adicional para usuarios autenticados -->
+</div>
+{% endif %}
 {% endblock %}
-
-
-

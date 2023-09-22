@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from AppCoder.models import Publicacion, Comentario
-from AppCoder.forms import UsuarioForm, PublicacionForm, ComentarioForm, UserCreationFormulario, UserEditionFormulario
+from AppCoder.models import Publicacion, Comentario, UserProfile
+from AppCoder.forms import AvatarUploadForm, PublicacionForm, ComentarioForm, UserCreationFormulario, UserEditionFormulario
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from django.contrib.auth import authenticate, login
@@ -10,7 +10,8 @@ from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import gettext as _
 from django.contrib.auth.forms import PasswordChangeForm
-
+from django.contrib.auth.decorators import login_required
+from django.views import View
 
 def inicio(request):
       publicaciones = Publicacion.objects.all()
@@ -83,31 +84,20 @@ def cargar_formulario_comentario(request):
       comentario_form = ComentarioForm()
       return render(request, 'AppCoder/formulario_comentario.html', {'comentario_form': comentario_form, 'publicacion': publicacion})
 
-class PublicacionListView(ListView):
+class PublicacionDelete(DeleteView):
       model = Publicacion
-      context_object_name = "publicaciones"
-      template_name = "AppCoder/publicaciones_lista.html"
-
-class PublicacionDetailView(DetailView):
-      model = Publicacion
-      context_object_name = "publicacionDetalle"
-      template_name = "AppCoder/publicacion_detalle.html"
-
-class PublicacionCreateView(CreateView):
-      model = Publicacion
-      template_name = "AppCoder/publicacion_crear.html"
-      fields = ['autor_nombre','titulo', 'contenido']
-      success_url = reverse_lazy('MiMuro')
-
+      template_name = "AppCoder/cbv_publicacion_delete.html"
+      success_url = reverse_lazy("MiMuro")
+      
 class PublicacionUpdateView(UpdateView):
       model = Publicacion
-      template_name = "AppCoder/publicacion_actualizar.html"
-      fields = ['autor_nombre','titulo', 'contenido']
+      template_name = "AppCoder/cbv_publicacion_editar.html"
+      fields = ['contenido']
+      success_url = reverse_lazy("MiMuro")  # URL a la que redirigir después de la edición
 
-class PublicacionDeleteView(DeleteView):
-      model = Publicacion
-      template_name = "AppCoder/publicacion_eliminar.html"
-      success_url = reverse_lazy('MiMuro')
+      def get_queryset(self):
+            # Filtrar las publicaciones del usuario actual
+            return Publicacion.objects.filter(autor_nombre=self.request.user)
 
 #Login, Logout, Registro y Editar Usuario
 
@@ -195,19 +185,12 @@ def editar_usuario_view(request):
                   {"form": UserEditionFormulario()}
             )
       else:
-            formulario = UserEditionFormulario(request.POST, request.FILES, instance=request.user)
+            formulario = UserEditionFormulario(request.POST)
             if formulario.is_valid():
                   informacion = formulario.cleaned_data
                   user = request.user
                   user.email = informacion["email"]
                   user.username = informacion["username"]
-                  
-                  # Verificar si el campo 'avatar' se ha enviado en la solicitud
-                  if 'avatar' in request.FILES:
-                        user.avatar = request.FILES['avatar']
-                        print("Avatar cargado:", user.avatar)  # Mensaje de depuración
-                  else:
-                        print("Ningún avatar cargado")  # Mensaje de depuración
                   
                   user.save()
 
@@ -218,7 +201,6 @@ def editar_usuario_view(request):
                   )
             else:
                   formulario = UserEditionFormulario(instance=request.user)
-                  print("Errores en el formulario:", formulario.errors)  # Mensaje de depuración
                   
                   return render(
                   request,
