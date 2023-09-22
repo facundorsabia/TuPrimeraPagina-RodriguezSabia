@@ -2,23 +2,17 @@
  My first Django and Python Proyect
 
 
- PreEntrega nro 3 para el curso de Python de CoderHouse. 
+Entrega Final para el proyecto de Python de CoderHouse
 
- Para esta entrega he creado una página web utilizando el framework de Django. 
- El sitio web será una especie de red social donde podremos hacer publicaciones y recibir comentarios. 
- 
- Para comenzar a probar las funcionalidades puedes dirigirte a la sección del navegador "Crear Publicación":
- allí tendrás un formulario donde podrás incluir el nombre del autor y el contenido escrito que desees (tiene una limitación de 280 caracteres al igual que Twitter). 
+En esta APP he utilizado Python para programar una página web, valiéndome del framework Django y utilizando la técnica de Modelo Vista Controlador para su lógica.
 
- Podrás ver tu publicación creada en la sección "Mi Muro", que es donde apareceran todas tus publicaciones. 
+En la misma se utilizan funciones customizadas y además Vistas Basadas en Clases, para poder Crear, Editar, Eliminar o Leer bases de datos(CRUD).
 
- Además la publicación aparecerá en el inicio en la sección "Feed", pero además aquí podrás comentar las publicaciones, mediante otro formulario. Los comentarios apareceran debajo de la publicación comentada, ligados a esta. 
+Como usuario podremos acceder a la app corriendo el server local con python manage.py runserver y luego accediendo a http://127.0.0.1:8000/AppCoder/Inicio/
 
- En la sección de "Búsqueda" podrás buscar publicaciones filtradas por palabras. 
+Allí podremos Registrarnos como Usuario y luego accederemos al menú completo de la App. La App es una especie de red social parecida a twitter, en la que 
+podremos crear publicaciones escritas y estas se mostrarán en un Feed principal (Inicio), donde otros usuarios podrán comentarlas. Además las publicaciones estarán disponibles en 
+la sección Mi Muro, donde podremos editar o eliminar las publicaciones propias. Además contaremos con una sección de búsqueda, para buscar las publicaciones filtradas por palabras. 
+Por ultimo tendremos una sección de Perfil para editar nuestro user name, nuestro email o incluso cambiar nuestra contraseña.
 
- Por último en la sección "Hilo", por el momento y sólo a modo de práctica y para incluir un modelo más he creado el formulario para la creacion de un usuario y contraseña. 
-
- Como lo solicita la consigna para esta entrega he creado 3 modelos: Publicacion, Comentario y CrearUsuario. 
- Además he creado 4 formularios, uno para cada modelo y uno para la búsqueda. 
- Todo utilizando herencia html y el patron MVT.
 
