@@ -15,4 +15,6 @@ podremos crear publicaciones escritas y estas se mostrarán en un Feed principal
 la sección Mi Muro, donde podremos editar o eliminar las publicaciones propias. Además contaremos con una sección de búsqueda, para buscar las publicaciones filtradas por palabras. 
 Por ultimo tendremos una sección de Perfil para editar nuestro user name, nuestro email o incluso cambiar nuestra contraseña.
 
+Además he creado un superuser admin con pass admin123 para poder editar las bases de datos desde la plataforma que nos brinda Django.
+
 
